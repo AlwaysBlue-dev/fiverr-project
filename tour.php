@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿<?php
+session_start();
+?>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -29,7 +32,7 @@
 </head>
 
 <body>
-	
+
 
 	<script src="tour.js"></script>
 
@@ -59,5 +62,11 @@
 
 </html>
 <?php
-	include 'conn.php';
-	?>
+include 'conn.php';
+
+if (isset($_SESSION['username'])) {
+	header("location:tour.php");
+} else {
+	die("Not allowed");
+}
+?>

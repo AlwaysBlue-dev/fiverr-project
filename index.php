@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -94,22 +97,30 @@
             }
 
 
-
             if (isset($_POST['submit'])) {
                 $user_password = $_POST['password'];
-
+                $_SESSION['username'] = 'user';
+                
                 $query = "select * from login where password = '$user_password'";
                 $login_result = mysqli_query($conn, $query);
-
                 $count = mysqli_num_rows($login_result);
+
                 if ($count > 0) {
-                    header("location:tour.php");
+                    if (isset($_SESSION['username'])) {
+                        header("location:tour.php");
+                        $delete_query = "delete from login where password = '$user_password'";
+                        $delete_res =  mysqli_query($conn, $delete_query);
+                    } else {
+                        die("Not allowed");
+                    }
+                ?>
+                <?php
+
                 } else {
                 ?>
-
                     <script>
                         alert("Wrong Password")
-                    </script>;
+                    </script>
             <?php
                 }
             }
