@@ -8,10 +8,10 @@
     <title>Document</title>
 
     <style>
-        .login_btn {
+        button {
             background-color: #4CAF50;
             width: 100%;
-            color: #fff;
+            color: orange;
             padding: 15px;
             margin: 10px 0px;
             border: none;
@@ -34,7 +34,7 @@
             box-sizing: border-box;
         }
 
-        .login_btn:hover {
+        button:hover {
             opacity: 0.7;
         }
 
@@ -49,58 +49,60 @@
             padding: 25px;
             background-color: lightblue;
         }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
     </style>
 
-    <?php session_start(); ?>
 </head>
 
 <body>
-    <a href="admin_login.php">Admin</a>
+    <a href="admin_logout.php">Log Out</a>
     <center>
-        <h1> Login </h1>
+        <h1>Create User </h1>
     </center>
     <form method="POST">
         <div class="container">
-            <label>Password : </label>
-            <input type="password" name="password" placeholder="Enter Password" />
-            <input type="submit" name="submit" value="Login" class="login_btn" />
+            <input type="submit" name="generate" value="generate password" />
+            <input type="submit" name="showpwd" value="show generated passwords" />
+        </div>
     </form>
-
-
     <?php
-
+    session_start();
 
     include 'conn.php';
 
+    function generate_password($len = 8)
+    {
+        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        $password = substr(str_shuffle($chars), 0, $len);
+        return $password;
+    }
 
 
-    if (isset($_POST['submit'])) {
-
-        $user_password = $_POST['password'];
-
-        $query = "select * from login where password = '$user_password'";
-        $login_result = mysqli_query($conn, $query);
-        $count = mysqli_num_rows($login_result);
-
-        if ($count > 0) {
-            $_SESSION["login"] = "Login Sucessfully";
-            header("location:tour.php");
+    if (isset($_POST['generate'])) {
+        $gen_pass = generate_password();
+        $gen_querry = "insert into login (id, password) values(DEFAULT, '$gen_pass')";
+        $querry_res = mysqli_query($conn, $gen_querry);
+        if ($querry_res) {
     ?>
+            <script>
+                alert("Password generated")
+            </script>
         <?php
-
         } else {
         ?>
             <script>
-                alert("Wrong Password")
+                alert("No Password generated")
             </script>
     <?php
         }
     }
 
+    if (isset($_POST['showpwd'])) {
+        header("location:showpassword.php");
+    }
     ?>
-
-    </div>
-    </form>
-</body>
-
-</html>

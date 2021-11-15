@@ -1,7 +1,4 @@
-﻿<?php
-session_start();
-?>
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -32,8 +29,13 @@ session_start();
 </head>
 
 <body>
-
-
+	<?php
+	session_start();
+	if (!$_SESSION) {
+		header("location:index.php");
+	}
+	include 'conn.php';
+	?>
 	<script src="tour.js"></script>
 
 	<div id="pano" style="width:100%;height:100%;">
@@ -61,12 +63,3 @@ session_start();
 </body>
 
 </html>
-<?php
-include 'conn.php';
-
-if (isset($_SESSION['username'])) {
-	header("location:tour.php");
-} else {
-	die("Not allowed");
-}
-?>
